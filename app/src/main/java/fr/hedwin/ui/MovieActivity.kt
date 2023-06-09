@@ -1,8 +1,10 @@
 package fr.hedwin.ui
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -54,6 +56,7 @@ class MovieActivity : AppCompatActivity() {
             val favorisBtn = findViewById<ImageButton>(R.id.buttonFav2);
             val originalTintList = favorisBtn.imageTintList;
             val recommBtn = findViewById<ImageButton>(R.id.buttonRecomm2);
+            val videoBtn = findViewById<ImageButton>(R.id.buttonVideo);
 
             if (DashboardFragment.containsMovie(movie)) {
                 favorisBtn.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.favorite_color))
@@ -91,6 +94,12 @@ class MovieActivity : AppCompatActivity() {
                         t.printStackTrace()
                     }
                 })
+            }
+
+            videoBtn.setOnClickListener {
+                movie.videos.then {
+                    openYouTubeVideo(it.videoList.get(0).key)
+                }
             }
 
             textView.text = movie.title;
@@ -147,5 +156,16 @@ class MovieActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    fun openYouTubeVideo(videoId: String) {
+        val intentApp = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$videoId"))
+        val intentWeb = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=$videoId"))
+
+        try {
+            startActivity(intentApp)
+        } catch (ex: ActivityNotFoundException) {
+            startActivity(intentWeb)
+        }
     }
 }

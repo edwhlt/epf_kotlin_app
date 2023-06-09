@@ -11,8 +11,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.hedwin.tmdb.Results;
-import fr.hedwin.tmdb.TMDB;
 import fr.hedwin.tmdb.model.IdElement;
+import fr.hedwin.tmdb.retrofit.TMDB;
 import fr.hedwin.tmdb.utils.Future;
 
 import java.util.List;
