@@ -103,7 +103,7 @@ class MovieActivity : AppCompatActivity() {
             }
 
             textView.text = movie.title;
-            genreView.text = movie.genres?.joinToString { it.name+", " };
+            genreView.text = movie.genres?.joinToString { it.name };
             dateView.text = movie.releaseDate;
             descView.text = movie.overview;
 
@@ -112,7 +112,7 @@ class MovieActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<Credits?>, response: Response<Credits?>) {
                     val it = response.body();
                     if (it != null) {
-                        actorView.text = it.cast.joinToString { it.name+", " }
+                        actorView.text = it.cast.joinToString { it.name }
                     }
                 }
                 override fun onFailure(call: Call<Credits?>, t: Throwable) {
@@ -127,7 +127,7 @@ class MovieActivity : AppCompatActivity() {
                     print("GENRES")
                     if (it != null) {
                         println(it.genres)
-                        genreView.text = it.genres.filter { movie.genresIds.contains(it.id) }.joinToString { "${it.name}, " }
+                        genreView.text = it.genres.filter { movie.genresIds.contains(it.id) }.joinToString { it.name }
                     }
                 }
                 override fun onFailure(call: Call<Genre.GenreList?>, t: Throwable) {
