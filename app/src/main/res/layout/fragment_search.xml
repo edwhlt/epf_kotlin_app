@@ -9,11 +9,11 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTextTextPersonName"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
-        android:layout_height="65dp"
+        android:layout_height="57dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="7dp"
         android:layout_marginEnd="8dp"
         android:hint="Rechercher"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
@@ -36,8 +36,9 @@
         android:indeterminate="true"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.92"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listResult"
@@ -52,12 +53,16 @@
 
     <ImageButton
         android:id="@+id/imageButton"
-        android:layout_width="61dp"
-        android:layout_height="65dp"
+        android:layout_width="69dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="4dp"
+        android:padding="0dp"
         android:src="@drawable/outline_search_24"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

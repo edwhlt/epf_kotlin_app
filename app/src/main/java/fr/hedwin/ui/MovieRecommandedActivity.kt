@@ -23,11 +23,12 @@ class MovieRecommandedActivity  : AppCompatActivity() {
         val movies = ObjectMapper().readValue(intent.getStringExtra("movies"), object : TypeReference<ResultsPage<DbMovie>?>() {})
 
         if(movies != null){
+            title = "Films recommandés"
             val listView: RecyclerView = findViewById(R.id.listResult)
 
             listView.isClickable = true;
-            listView.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
-            listView.adapter = MovieAdapterEmpty(movies.results.toMutableList());
+            listView.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+            listView.adapter = MovieAdapter(movies.results.toMutableList(), false);
         }
 
         // Set up the back button to navigate back to the previous activity

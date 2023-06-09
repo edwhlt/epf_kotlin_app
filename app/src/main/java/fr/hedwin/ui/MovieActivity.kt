@@ -1,14 +1,19 @@
 package fr.hedwin.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.res.ColorStateList
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.fasterxml.jackson.core.type.TypeReference
@@ -17,6 +22,7 @@ import fr.hedwin.R
 import fr.hedwin.tmdb.`object`.Credits
 import fr.hedwin.tmdb.`object`.DbMovie
 import fr.hedwin.tmdb.`object`.Genre
+import fr.hedwin.tmdb.`object`.ResultsPage
 import fr.hedwin.tmdb.retrofit.TMDB.FR
 import fr.hedwin.tmdb.retrofit.TMDB.SERVICE
 import fr.hedwin.ui.dashboard.DashboardFragment
@@ -24,6 +30,7 @@ import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class MovieActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +49,50 @@ class MovieActivity : AppCompatActivity() {
             val actorView = findViewById<TextView>(R.id.actorView);
             val genreView = findViewById<TextView>(R.id.genreView);
             val descView = findViewById<TextView>(R.id.descView);
+
+
+            val favorisBtn = findViewById<ImageButton>(R.id.buttonFav2);
+            val originalTintList = favorisBtn.imageTintList;
+            val recommBtn = findViewById<ImageButton>(R.id.buttonRecomm2);
+
+            if (DashboardFragment.containsMovie(movie)) {
+                favorisBtn.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.favorite_color))
+            }
+
+            favorisBtn.setOnClickListener {
+                if(DashboardFragment.containsMovie(movie)){
+                    DashboardFragment.removeMovie(movie)
+                    favorisBtn.imageTintList = originalTintList;
+                    Toast.makeText(applicationContext, "Film supprimé des favoris !", Toast.LENGTH_SHORT).show();
+                }
+                else try{
+                    DashboardFragment.addMovie(movie)
+                    favorisBtn.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.favorite_color))
+                    Toast.makeText(applicationContext, "Film ajouté aux favoris !", Toast.LENGTH_SHORT).show();
+                }catch (e: Exception){
+                    Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            recommBtn.setOnClickListener {
+                SERVICE.recommandedMovieFrom(movie.id, FR).enqueue(object : Callback<ResultsPage<DbMovie>?> {
+                    override fun onResponse(call: Call<ResultsPage<DbMovie>?>, response: Response<ResultsPage<DbMovie>?>) {
+                        val it = response.body();
+
+                        if (it != null && it.results.isNotEmpty()) {
+                            val intent = Intent(applicationContext, MovieRecommandedActivity::class.java)
+                            intent.putExtra("movies", ObjectMapper().writeValueAsString(it))
+                            startActivity(intent)
+                        }else{
+                            Toast.makeText(applicationContext, "Aucun film recommandé pour ce film !", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    override fun onFailure(call: Call<ResultsPage<DbMovie>?>, t: Throwable) {
+                        t.printStackTrace()
+                    }
+                })
+            }
+
             textView.text = movie.title;
             genreView.text = movie.genres?.joinToString { it.name+", " };
             dateView.text = movie.releaseDate;

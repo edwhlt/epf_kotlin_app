@@ -25,7 +25,7 @@ import retrofit2.Response
 import java.lang.Exception
 import java.util.function.Consumer
 
-class MovieAdapterEmpty(private val films: MutableList<DbMovie>) : RecyclerView.Adapter<MovieAdapterEmpty.MovieViewHolder>() {
+class MovieAdapterEmpty(private val films: MutableList<DbMovie>, private val ressouce: Int) : RecyclerView.Adapter<MovieAdapterEmpty.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val image: ImageView = itemView.findViewById(R.id.imageView)
@@ -38,7 +38,7 @@ class MovieAdapterEmpty(private val films: MutableList<DbMovie>) : RecyclerView.
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_movie, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(ressouce, parent, false)
         return MovieViewHolder(view)
     }
 

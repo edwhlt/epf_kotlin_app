@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -27,7 +28,7 @@ import java.lang.Exception
 import java.util.function.Consumer
 
 
-class MovieAdapter(private val films: MutableList<DbMovie>) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+class MovieAdapter(private val films: MutableList<DbMovie>, private val withBtn: Boolean) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
@@ -54,8 +55,15 @@ class MovieAdapter(private val films: MutableList<DbMovie>) : RecyclerView.Adapt
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val film = films[position]
 
+        if(!withBtn){
+            holder.buttonFav.isVisible = false;
+            holder.buttonRecomm.isVisible = false;
+        }
+
         holder.titleTextView.text = film.title
         holder.descriptionTextView.text = film.overview
+
+        val originalTintList = holder.buttonFav.imageTintList
 
         if (DashboardFragment.containsMovie(film)) {
             holder.buttonFav.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.context, R.color.favorite_color))
@@ -64,7 +72,7 @@ class MovieAdapter(private val films: MutableList<DbMovie>) : RecyclerView.Adapt
         holder.buttonFav.setOnClickListener {
             if(DashboardFragment.containsMovie(film)){
                 DashboardFragment.removeMovie(film)
-                holder.buttonFav.imageTintList = null;
+                holder.buttonFav.imageTintList = originalTintList;
                 Toast.makeText(holder.itemView.context, "Film supprimé des favoris !", Toast.LENGTH_SHORT).show();
             }
             else try{
@@ -83,6 +91,7 @@ class MovieAdapter(private val films: MutableList<DbMovie>) : RecyclerView.Adapt
 
                     if (it != null && it.results.isNotEmpty()) {
                         val intent = Intent(holder.itemView.context, MovieRecommandedActivity::class.java)
+                        intent.putExtra("movieName", film.title)
                         intent.putExtra("movies", ObjectMapper().writeValueAsString(it))
                         holder.itemView.context.startActivity(intent)
                     }else{

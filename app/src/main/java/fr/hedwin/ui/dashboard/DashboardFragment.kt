@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.hedwin.R
 import fr.hedwin.databinding.FragmentDashboardBinding
 import fr.hedwin.tmdb.`object`.DbMovie
 import fr.hedwin.ui.MovieActivity
@@ -62,7 +63,7 @@ class DashboardFragment : Fragment() {
         fun setContext(context: Context) {
             appContext = context.applicationContext
         }
-        val adapter = MovieAdapterEmpty(mutableListOf<DbMovie>());
+        val adapter = MovieAdapterEmpty(mutableListOf<DbMovie>(), R.layout.list_movie_favorite);
         fun addMovie(movie: DbMovie){
             if (!containsMovie(movie)) {
                 adapter.addMovies(listOf(movie))

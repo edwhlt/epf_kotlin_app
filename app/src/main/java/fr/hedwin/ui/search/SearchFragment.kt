@@ -29,7 +29,7 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var page = 1;
-    private val adapter = MovieAdapter(mutableListOf<DbMovie>());
+    private val adapter = MovieAdapter(mutableListOf<DbMovie>(), true);
 
     override fun onCreateView(
         inflater: LayoutInflater,
